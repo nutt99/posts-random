@@ -7,7 +7,9 @@ use CodeIgniter\Router\RouteCollection;
  */
 $routes->get('/', 'Home::index');
 $routes->get('/navbar', 'Home::navbar');
-$routes->get('/login', 'Home::login');
+
+$routes->get('/login', 'UserController::index');
+
 $routes->get('/page/detail', 'Home::detailPage');
 $routes->get('/profile', 'Home::profile');
 $routes->get('/createpost', 'Home::uploadForm');
