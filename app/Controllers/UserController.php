@@ -15,7 +15,7 @@ class UserController extends BaseController
         return view('login/login_view');
     }
 
-    public function register(){
+    public function register(): RedirectResponse{
         try{
             $username = $this->request->getPost('username');
             $email = $this->request->getPost('email');
