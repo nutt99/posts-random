@@ -37,7 +37,7 @@ class UserController extends BaseController
 
                 return redirect()->to('/');
             } else{
-                $session->setFlashdata('pesan', 'Username atau email sudah digunakan');
+                $session->setFlashdata('pesan', 'Usernam\e atau email sudah digunakan');
                 return redirect()->to('/register');
             }
         } catch (Exception $e){
