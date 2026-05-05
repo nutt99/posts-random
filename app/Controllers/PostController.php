@@ -11,4 +11,8 @@ class PostController extends BaseController
     {
         //
     }
+
+    public function addPhoto(){
+        
+    }
 }
