@@ -29,10 +29,30 @@ class CommentController extends BaseController
                 'id_user' => $id_user,
                 'comments_text' => $text
             ])){
-                
+                return 'success';
+            } else{
+                $session->setFlashdata('pesan', 'Terjadi kesalahan saat berkomentar');
+                return redirect()->to('/');
             }
         } catch (Exception $e){
-
+            $session->setFlashdata('pesan', $e->getMessage());
+            return redirect()->to('/');
         }
+    }
+
+    public function updateComment(){
+        $comment_id = $this->request->getPost('comment_id');
+        $comments_text = $this->request->getPost('comments_text');
+
+        $session = session();
+        $model = new Comments();
+
+        //update data
+        $model->update($comment_id, [
+            'id_posts' => $comment_id,
+            'id_user' => $session->get('id_user'),
+            'comments_text' => $comments_text
+        ]);
+        
     }
 }
