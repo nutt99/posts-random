@@ -35,7 +35,7 @@
 
 <body> -->
 
-<nav class="navbar navbar-light bg-white border-bottom py-2">
+<nav class="navbar navbar-light bg-white border-bottom py-2 sticky-top">
     <div class="container-fluid d-flex align-items-center">
 
         <button class="btn btn-light rounded-circle me-2 d-flex justify-content-center align-items-center" type="button"
@@ -46,11 +46,12 @@
                 <i class="fab fa-pinterest fa-2x"></i>
             </a> -->
 
-        <form class="d-flex flex-grow-1 mx-2 mx-md-4">
+        <form action="/search" method="get" class="d-flex flex-grow-1 mx-2 mx-md-4">
             <div class="search-wrapper d-flex align-items-center bg-light px-3 py-3 w-100" style="border-radius: 10px;">
                 <i class="fas fa-search text-muted me-2"></i>
-                <input class="form-control bg-transparent border-0 p-0" type="search" placeholder="Cari"
-                    aria-label="Cari">
+                <input type="text" name="q" class="form-control bg-light border-0 rounded-end-pill py-2"
+                    placeholder="Cari pin..." value="<?= isset($_GET['q']) ? esc($_GET['q']) : '' ?>"
+                    style="box-shadow: none;">
             </div>
         </form>
 
@@ -71,14 +72,20 @@
         <h5 class="offcanvas-title" id="sidebarMenuLabel">Menu Utama</h5>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
-    <div class="offcanvas-body">
-        <div class="d-flex flex-column gap-2">
-            <a href="#" class="sidebar-link"><i class="fas fa-home fa-fw me-2"></i> Beranda</a>
-            <a href="#" class="sidebar-link"><i class="fas fa-compass fa-fw me-2"></i> Jelajahi</a>
-            <a href="#" class="sidebar-link"><i class="fas fa-plus fa-fw me-2"></i> Buat Pin</a>
-            <hr>
-            <a href="#" class="sidebar-link"><i class="fas fa-cog fa-fw me-2"></i> Pengaturan</a>
-        </div>
+    <div class="d-flex flex-column gap-2">
+        <a href="/" class="sidebar-link"><i class="fas fa-home fa-fw me-2"></i> Beranda</a>
+        <a href="/createpost" class="sidebar-link"><i class="fas fa-plus fa-fw me-2"></i> Buat Pin</a>
+
+        <hr>
+
+        <?php if (session()->get('isLogin')): ?>
+            <a href="/profile" class="sidebar-link"><i class="fas fa-user fa-fw me-2"></i> Profil
+                (<?= session()->get('username'); ?>)</a>
+            <a href="/logout" class="sidebar-link text-danger"><i class="fas fa-sign-out-alt fa-fw me-2"></i> Keluar</a>
+        <?php else: ?>
+            <a href="/login" class="sidebar-link"><i class="fas fa-sign-in-alt fa-fw me-2"></i> Masuk</a>
+            <a href="/register" class="sidebar-link"><i class="fas fa-user-plus fa-fw me-2"></i> Daftar</a>
+        <?php endif; ?>
     </div>
 </div>
 <!-- 

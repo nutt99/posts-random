@@ -13,7 +13,7 @@ class Posts extends Model
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = [
-        'id_user', 'content_url', 'description'
+        'id_user', 'content_url', 'description', 'title'
     ];
 
     protected bool $allowEmptyInserts = false;

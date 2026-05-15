@@ -15,32 +15,30 @@ class CommentController extends BaseController
         //
     }
 
-    public function addComment(){
-        try{
-            $session = session();
-            $model = new Comments();
-
-            $id_post = $this->request->getPost('id_post');
-            $id_user = $session->get('id');
-            $text = $this->request->getPost('comments_text');
-
-            if($model->insert([
-                'id_posts' => $id_post,
-                'id_user' => $id_user,
-                'comments_text' => $text
-            ])){
-                return 'success';
-            } else{
-                $session->setFlashdata('pesan', 'Terjadi kesalahan saat berkomentar');
-                return redirect()->to('/');
-            }
-        } catch (Exception $e){
-            $session->setFlashdata('pesan', $e->getMessage());
-            return redirect()->to('/');
+    public function addComment()
+    {
+        if (!session()->get('isLogin')) {
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Silahkan login untuk berkomentar']);
         }
+
+        $commentModel = new Comments();
+        $komentar = $this->request->getPost('komentar');
+        
+        $commentModel->insert([
+            'id_user'      => session()->get('id'),
+            'id_posts'      => $this->request->getPost('id_post'),
+            'comments_text' => $komentar
+        ]);
+
+        return $this->response->setJSON([
+            'status'   => 'success',
+            'username' => session()->get('username'),
+            'text'     => $komentar
+        ]);
     }
 
-    public function updateComment(){
+    public function updateComment()
+    {
         $comment_id = $this->request->getPost('comment_id');
         $comments_text = $this->request->getPost('comments_text');
 
@@ -53,6 +51,6 @@ class CommentController extends BaseController
             'id_user' => $session->get('id_user'),
             'comments_text' => $comments_text
         ]);
-        
+
     }
 }

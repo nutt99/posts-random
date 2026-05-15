@@ -1,196 +1,173 @@
 <?= $this->extend('layout/template'); ?>
-<?= $this->section('styles') ?>
+
+<?= $this->section('styles'); ?>
 <style>
-body {
-    background-color: #ffffff;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    color: #111;
-}
+    body {
+        background-color: #f0f0f0;
+    }
 
-/* --- STYLING AREA UPLOAD (KIRI) --- */
-.upload-box {
-    background-color: #e9e9e9;
-    border-radius: 32px;
-    height: 480px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-    position: relative;
-}
+    .create-card {
+        background-color: white;
+        border-radius: 32px;
+        box-shadow: 0 1px 20px 0 rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
 
-.upload-box:hover {
-    background-color: #e0e0e0;
-}
+    .upload-area {
+        border: 2px dashed #dadada;
+        border-radius: 20px;
+        background-color: #efefef;
+        height: 450px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        position: relative;
+    }
 
-.upload-icon-wrapper {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    background-color: #111;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 16px;
-}
+    .upload-area:hover {
+        background-color: #e2e2e2;
+    }
 
-/* Teks petunjuk di bagian bawah kotak abu-abu */
-.upload-hint-bottom {
-    position: absolute;
-    bottom: 30px;
-    text-align: center;
-    font-size: 0.8rem;
-    color: #767676;
-    padding: 0 20px;
-}
+    .upload-area img#preview {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 20px;
+        display: none;
+    }
 
-/* File input disembunyikan menutupi kotak */
-.file-input-hidden {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0;
-    cursor: pointer;
-}
+    .input-custom {
+        border: none;
+        border-bottom: 2px solid #efefef;
+        border-radius: 0;
+        padding: 10px 0;
+        font-size: 1.2rem;
+    }
 
-.btn-light-custom {
-    background-color: #efefef;
-    font-weight: 600;
-    color: #111;
-    border: none;
-}
+    .input-custom:focus {
+        box-shadow: none;
+        border-bottom-color: #007bff;
+    }
 
-.btn-light-custom:hover {
-    background-color: #e2e2e2;
-}
+    .title-input {
+        font-size: 2.5rem;
+        font-weight: bold;
+    }
 
-/* --- STYLING FORM INPUT PINTEREST (KANAN) --- */
-.pinterest-input-group {
-    background-color: #e9e9e9;
-    border-radius: 16px;
-    padding: 8px 16px 4px 16px;
-    margin-bottom: 24px;
-    transition: box-shadow 0.2s;
-}
-
-/* Efek fokus saat diklik (outline biru muda) */
-.pinterest-input-group:focus-within {
-    box-shadow: 0 0 0 4px rgba(0, 132, 255, 0.2);
-    background-color: #ffffff;
-    border: 1px solid #0084ff;
-}
-
-.pinterest-input-group label {
-    font-size: 0.75rem;
-    color: #555;
-    margin-bottom: 2px;
-    display: block;
-}
-
-.pinterest-input-group input,
-.pinterest-input-group textarea,
-.pinterest-input-group select {
-    background: transparent;
-    border: none;
-    width: 100%;
-    padding: 0;
-    outline: none;
-    box-shadow: none;
-    color: #111;
-    font-size: 1rem;
-    margin-bottom: 8px;
-}
-
-/* Khusus input Judul agar teksnya lebih besar */
-.input-title {
-    font-size: 1.25rem !important;
-    font-weight: 600;
-}
-
-.pinterest-input-group input::placeholder,
-.pinterest-input-group textarea::placeholder {
-    color: #767676;
-    font-weight: normal;
-}
+    #fileInput {
+        display: none;
+    }
 </style>
-<?= $this->endSection() ?>
+<?= $this->endSection(); ?>
 
-<?= $this->section('content') ?>
-<div class="container mt-4 mb-5" style="max-width: 1100px;">
+<?= $this->section('content'); ?>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="create-card p-4 p-md-5">
+                
+                <?php if (session()->getFlashdata('errors')): ?>
+                    <div class="alert alert-danger rounded-4 mb-4">
+                        <ul class="mb-0">
+                            <?php foreach (session()->getFlashdata('errors') as $error): ?>
+                                <li><?= $error ?></li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </div>
+                <?php endif; ?>
 
-    <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
-        <h4 class="fw-bold m-0">Buat Pin</h4>
-        <button class="btn btn-danger rounded-pill px-4 py-2 fw-bold"
-            style="background-color: #E60023; border: none;">Simpan</button>
-    </div>
+                <form action="/createpost" method="post" enctype="multipart/form-data">
+                    <?= csrf_field(); ?>
+                    
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4 class="fw-bold text-secondary">Buat Pin Baru</h4>
+                        <button type="submit" class="btn btn-danger rounded-pill px-4 fw-bold">Simpan</button>
+                    </div>
 
-    <div class="row g-5">
+                    <div class="row">
+                        <div class="col-md-5 mb-4">
+                            <div class="upload-area" id="dropZone" onclick="document.getElementById('fileInput').click()">
+                                <div id="uploadPlaceholder" class="text-center p-3">
+                                    <div class="mb-3">
+                                        <i class="fas fa-arrow-circle-up fa-3x text-secondary"></i>
+                                    </div>
+                                    <p class="mb-0 fw-bold">Klik untuk mengunggah</p>
+                                    <small class="text-muted">Gunakan file JPG, PNG, atau WEBP kualitas tinggi kurang dari 20MB</small>
+                                </div>
+                                <img id="preview" src="#" alt="Pratinjau Gambar">
+                                <input type="file" name="foto" id="fileInput" accept="image/*" required onchange="previewImage(this)">
+                            </div>
+                        </div>
 
-        <div class="col-lg-5">
-            <div class="upload-box">
-                <input type="file" class="file-input-hidden" accept="image/*,video/mp4">
+                        <div class="col-md-7 ps-md-5">
+                            <div class="mb-5">
+                                <input type="text" name="judul" class="form-control input-custom title-input" placeholder="Tambahkan judul Anda" value="<?= old('judul') ?>" required>
+                            </div>
 
-                <div class="upload-icon-wrapper">
-                    <i class="fas fa-arrow-up"></i>
-                </div>
-                <p class="text-center fw-bold px-4" style="font-size: 1.1rem;">
-                    Pilih file atau seret dan jatuhkan di sini
-                </p>
+                            <div class="d-flex align-items-center mb-4">
+                                <div class="bg-light rounded-circle me-3 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+                                    <span class="fw-bold"><?= substr(session()->get('username') ?? 'U', 0, 1) ?></span>
+                                </div>
+                                <span class="fw-bold"><?= session()->get('username') ?? 'User' ?></span>
+                            </div>
 
-                <div class="upload-hint-bottom">
-                    Sebaiknya gunakan file .jpg berkualitas tinggi kurang dari 20 MB atau file .mp4 berukuran kurang
-                    dari 200 MB.
-                </div>
+                            <div class="mb-3">
+                                <textarea name="deskripsi" class="form-control input-custom" rows="3" placeholder="Beritahu semua orang tentang Pin Anda"><?= old('deskripsi') ?></textarea>
+                            </div>
+                            
+                            <p class="text-muted small mt-5">
+                                <i class="fas fa-info-circle me-1"></i> Tips: Gunakan kata kunci yang relevan agar orang lain mudah menemukan karya Anda.
+                            </p>
+                        </div>
+                    </div>
+                </form>
             </div>
-
-            <button class="btn btn-light-custom w-100 rounded-pill py-3 mt-3">
-                Simpan dari URL
-            </button>
         </div>
-
-        <div class="col-lg-7">
-            <form action="#" method="POST">
-
-                <div class="pinterest-input-group">
-                    <label for="judul">Judul</label>
-                    <input type="text" id="judul" name="judul" class="input-title" placeholder="Tambahkan judul">
-                </div>
-
-                <div class="pinterest-input-group">
-                    <label for="deskripsi">Deskripsi</label>
-                    <textarea id="deskripsi" name="deskripsi" rows="3"
-                        placeholder="Tambahkan deskripsi terperinci"></textarea>
-                </div>
-
-                <div class="pinterest-input-group">
-                    <label for="tautan">Tautan</label>
-                    <input type="url" id="tautan" name="tautan" placeholder="Tambahkan tautan">
-                </div>
-
-                <div class="pinterest-input-group">
-                    <label for="papan">Papan</label>
-                    <select id="papan" name="papan">
-                        <option value="" disabled selected>Pilih papan</option>
-                        <option value="1">Referensi UI/UX</option>
-                        <option value="2">Ilustrasi Anime</option>
-                        <option value="3">Game Assets</option>
-                    </select>
-                </div>
-
-                <div class="pinterest-input-group">
-                    <label for="tag">Topik yang diberi tag (0)</label>
-                    <input type="text" id="tag" name="tag" placeholder="Cari tag">
-                </div>
-
-            </form>
-        </div>
-
     </div>
 </div>
-<?= $this->endSection() ?>
+<?= $this->endSection(); ?>
+
+<?= $this->section('scripts'); ?>
+<script>
+    function previewImage(input) {
+        const preview = document.getElementById('preview');
+        const placeholder = document.getElementById('uploadPlaceholder');
+        
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+                placeholder.style.display = 'none';
+            }
+            
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    const dropZone = document.getElementById('dropZone');
+
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.style.backgroundColor = '#e2e2e2';
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+        dropZone.style.backgroundColor = '#efefef';
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.style.backgroundColor = '#efefef';
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            document.getElementById('fileInput').files = files;
+            previewImage(document.getElementById('fileInput'));
+        }
+    });
+</script>
+<?= $this->endSection(); ?>
