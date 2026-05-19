@@ -90,7 +90,8 @@ class UserController extends BaseController
                     $session->set([
                         'id' => $data['id'],
                         'username' => $data['username'],
-                        'isLogin' => true
+                        'isLogin' => true,
+                        'avatar'   => $data['avatar']
                     ]);
 
                     return redirect()->to('/');

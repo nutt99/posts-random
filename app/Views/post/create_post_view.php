@@ -84,7 +84,7 @@
                     
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <h4 class="fw-bold text-secondary">Buat Pin Baru</h4>
-                        <button type="submit" class="btn btn-danger rounded-pill px-4 fw-bold">Simpan</button>
+                        <button type="submit" class="btn btn-primary rounded-pill px-4 fw-bold">Simpan</button>
                     </div>
 
                     <div class="row">

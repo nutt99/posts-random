@@ -58,9 +58,31 @@
         <div class="d-flex align-items-center gap-3">
             <!-- <a href="#" class="text-dark"><i class="fas fa-bell fa-lg"></i></a>
                 <a href="#" class="text-dark"><i class="fas fa-comment-dots fa-lg"></i></a> -->
-            <div class="rounded-circle bg-secondary text-white d-flex justify-content-center align-items-center"
-                style="width: 40px; height: 40px; cursor: pointer;">
-                C
+            <div class="d-flex align-items-center gap-3">
+                <?php if (session()->get('isLogin')): ?>
+
+                    <a href="/profile" class="text-decoration-none" title="Lihat Profil">
+                        <?php
+                        $avatar = session()->get('avatar');
+                        $username = session()->get('username') ?? 'U';
+                        $inisial = strtoupper(substr($username, 0, 1));
+                        ?>
+
+                        <?php if (!empty($avatar) && $avatar !== 'default.png'): ?>
+                            <img src="<?= base_url('uploads/profile/' . $avatar) ?>"
+                                class="rounded-circle object-fit-cover shadow-sm border" style="width: 40px; height: 40px;"
+                                alt="Profil">
+                        <?php else: ?>
+                            <div class="rounded-circle bg-secondary text-white d-flex justify-content-center align-items-center fw-bold shadow-sm"
+                                style="width: 40px; height: 40px;">
+                                <?= $inisial ?>
+                            </div>
+                        <?php endif; ?>
+                    </a>
+
+                <?php else: ?>
+                    <a href="/login" class="btn btn-danger rounded-pill fw-bold px-4">Masuk</a>
+                <?php endif; ?>
             </div>
         </div>
 

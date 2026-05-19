@@ -132,22 +132,30 @@
                             <span id="likeCount"><?= $jumlahLike ?></span>
                         </button>
 
-                        <button
+                        <!-- <button
                             class="btn btn-interaction rounded-circle d-flex align-items-center justify-content-center"
                             style="width: 44px; height: 44px;">
                             <i class="fas fa-thumbs-down text-secondary fs-5"></i>
-                        </button>
+                        </button> -->
                         <button
                             class="btn btn-interaction rounded-circle d-flex align-items-center justify-content-center"
                             style="width: 44px; height: 44px;"
                             onclick="document.getElementById('inputKomentar').focus();">
                             <i class="fas fa-comment text-secondary fs-5"></i>
                         </button>
+                        <a href="<?= (strpos($post['content_url'], 'http') === 0) ? $post['content_url'] : base_url('uploads/photos/' . $post['content_url']) ?>"
+                            download="Pin_<?= esc($post['title']) ?>"
+                            class="btn btn-interaction rounded-circle d-flex align-items-center justify-content-center text-decoration-none"
+                            style="width: 44px; height: 44px;" title="Unduh Gambar">
+                            <i class="fas fa-download text-secondary fs-5"></i>
+                        </a>
                     </div>
 
-                    <button class="btn btn-interaction rounded-circle d-flex align-items-center justify-content-center"
-                        style="width: 44px; height: 44px;">
-                        <i class="fas fa-share text-secondary fs-5"></i>
+
+                    <button id="saveBtn" data-post="<?= $post['id'] ?>"
+                        class="btn <?= $sudahSimpan ? 'btn-dark' : 'btn-primary' ?> rounded-pill fw-bold px-4 py-2 text-white"
+                        style="transition: background-color 0.3s;">
+                        <?= $sudahSimpan ? 'Tersimpan' : 'Simpan' ?>
                     </button>
                 </div>
 
@@ -157,21 +165,29 @@
                     : base_url('uploads/photos/' . $post['content_url']);
                 ?>
                 <img src="<?= $fotoUrl ?>" class="img-fluid mt-3"
-                    style="border-radius: 30px; width: 100%; max-height: 65vh; object-fit: cover;" alt="">
+                    style="border-radius: 30px; width: 100%; max-height: 65vh; object-fit: contain;" alt="">
 
                 <div class="mt-3 text-muted px-2">
                     <h1 class="fw-bold"><?= esc($post['title']) ?></h1>
                     <p class="mt-3"><?= esc($post['description']) ?></p>
                 </div>
 
-                <div class="d-flex align-items-center mt-2 px-2">
-                    <img src="<?= base_url('uploads/profile/' . ($post['profile_photo'] ?? 'default.png')) ?>"
-                        class="rounded-circle me-2" style="width: 45px; height: 45px; object-fit: cover;">
+                <a href="<?= base_url('user/' . $post['id_user']) ?>" class="d-flex align-items-center mt-3 px-2 text-decoration-none text-dark animate-hover" style="cursor: pointer;">
+                    
+                    <?php if (!empty($post['avatar']) && $post['avatar'] !== 'default.png'): ?>
+                        <img src="<?= base_url('uploads/profile/' . $post['avatar']) ?>"
+                            class="rounded-circle me-2 object-fit-cover" style="width: 45px; height: 45px;">
+                    <?php else: ?>
+                        <div class="rounded-circle d-flex align-items-center justify-content-center bg-secondary text-white fw-bold me-2" style="width: 45px; height: 45px; font-size: 14px;">
+                            <?= strtoupper(substr($post['username'], 0, 1)) ?>
+                        </div>
+                    <?php endif; ?>
+                    
                     <div>
-                        <span class="fw-bold d-block"><?= esc($post['username'] ?? 'User') ?></span>
-                        <small class="text-muted">Pembuat Pin</small>
+                        <span class="fw-bold d-block lh-sm text-dark"><?= esc($post['display_name'] ?: $post['username']) ?></span>
+                        <small class="text-muted">@<?= esc($post['username']) ?></small>
                     </div>
-                </div>
+                </a>
 
                 <hr class="mt-4 mb-3">
                 <div class="px-2">
@@ -195,7 +211,7 @@
                         <input type="hidden" id="id_post_komentar" value="<?= $post['id'] ?>">
                         <input type="text" id="inputKomentar" class="form-control rounded-pill bg-light border-0"
                             placeholder="Tambahkan komentar..." required>
-                        <button type="submit" class="btn btn-danger rounded-pill px-3"><i
+                        <button type="submit" class="btn btn-primary rounded-pill px-3"><i
                                 class="fas fa-paper-plane"></i></button>
                     </form>
                 </div>
@@ -207,7 +223,6 @@
             <div class="masonry-grid">
                 <?php if (!empty($relatedPosts)): ?>
                     <?php
-                    // Langsung looping semua data tanpa array_slice
                     foreach ($relatedPosts as $rp):
                         $urlGambar = (strpos($rp['content_url'], 'http') === 0)
                             ? $rp['content_url']
@@ -235,15 +250,14 @@
 
 <?= $this->section('scripts'); ?>
 <script>
-    // --- LOGIKA LIKE MENGGUNAKAN AJAX ---
     const likeBtn = document.getElementById('likeBtn');
+    const saveBtn = document.getElementById('saveBtn');
 
     likeBtn.addEventListener('click', function () {
         let id_post = this.getAttribute('data-post');
         let formData = new FormData();
         formData.append('id_post', id_post);
 
-        // Panggil route toggleLike
         fetch('/like/toggle', {
             method: 'POST',
             body: formData
@@ -251,14 +265,12 @@
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'error') {
-                    alert(data.message); // Jika belum login
+                    alert(data.message);
                     window.location.href = '/login';
                 } else if (data.status === 'success') {
-                    // Update jumlah like
                     document.getElementById('likeCount').innerText = data.total;
                     const likeIcon = document.getElementById('likeIcon');
 
-                    // Ubah tampilan UI tombol
                     if (data.action === 'liked') {
                         likeBtn.classList.add('is-liked');
                         likeIcon.classList.replace('text-secondary', 'text-danger');
@@ -270,11 +282,10 @@
             }).catch(error => console.error('Error:', error));
     });
 
-    // --- LOGIKA KOMENTAR MENGGUNAKAN AJAX ---
     const formKomentar = document.getElementById('formKomentar');
 
     formKomentar.addEventListener('submit', function (e) {
-        e.preventDefault(); // Mencegah halaman refresh
+        e.preventDefault();
 
         let id_post = document.getElementById('id_post_komentar').value;
         let isiKomentar = document.getElementById('inputKomentar').value;
@@ -293,11 +304,9 @@
                     alert(data.message);
                     window.location.href = '/login';
                 } else if (data.status === 'success') {
-                    // Hapus tulisan "Belum ada komentar" jika ada
                     let noKomentar = document.getElementById('noKomentar');
                     if (noKomentar) noKomentar.remove();
 
-                    // Buat elemen komentar baru
                     let komentarBaru = `
                     <div class="d-flex align-items-start mb-2">
                         <strong class="me-2">${data.username}:</strong> 
@@ -305,17 +314,44 @@
                     </div>
                 `;
 
-                    // Tambahkan komentar baru ke paling bawah daftar
                     document.getElementById('wadahKomentar').insertAdjacentHTML('beforeend', komentarBaru);
 
-                    // Scroll otomatis ke komentar paling bawah
                     let wadah = document.getElementById('wadahKomentar');
                     wadah.scrollTop = wadah.scrollHeight;
 
-                    // Kosongkan inputan
                     document.getElementById('inputKomentar').value = '';
                 }
             }).catch(error => console.error('Error:', error));
     });
+
+    if (saveBtn) {
+        saveBtn.addEventListener('click', function () {
+            let id_post = this.getAttribute('data-post');
+            let formData = new FormData();
+            formData.append('id_post', id_post);
+
+            fetch('/post/toggle-save', {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'error') {
+                        alert(data.message);
+                        window.location.href = '/login';
+                    } else if (data.status === 'success') {
+                        if (data.action === 'saved') {
+                            saveBtn.classList.remove('btn-danger');
+                            saveBtn.classList.add('btn-dark');
+                            saveBtn.innerText = 'Tersimpan';
+                        } else {
+                            saveBtn.classList.remove('btn-dark');
+                            saveBtn.classList.add('btn-danger');
+                            saveBtn.innerText = 'Simpan';
+                        }
+                    }
+                }).catch(error => console.error('Error:', error));
+        });
+    }
 </script>
 <?= $this->endSection(); ?>

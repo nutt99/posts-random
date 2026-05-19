@@ -8,9 +8,9 @@
                 <div class="card-body p-4">
                     
                     <div class="text-center mb-4 mt-2">
-                        <div class="bg-danger rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 50px; height: 50px;">
+                        <!-- <div class="bg-danger rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 50px; height: 50px;">
                             <i class="fab fa-pinterest text-white fs-3"></i>
-                        </div>
+                        </div> -->
                         <h3 class="fw-bold">Selamat Datang</h3>
                         <p class="text-muted small">Temukan ide-ide baru untuk dicoba</p>
                     </div>
@@ -43,7 +43,7 @@
                             <input type="password" name="password_confirm" class="form-control rounded-pill py-2 px-3" placeholder="Ulangi kata sandi" required>
                         </div>
                         
-                        <button type="submit" class="btn btn-danger w-100 rounded-pill fw-bold py-2 mb-3">Lanjutkan</button>
+                        <button type="submit" class="btn btn-primary w-100 rounded-pill fw-bold py-2 mb-3">Lanjutkan</button>
                     </form>
                     
                     <div class="text-center mt-2 mb-2">

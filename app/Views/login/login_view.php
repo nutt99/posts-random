@@ -8,9 +8,9 @@
                 <div class="card-body p-4">
                     
                     <div class="text-center mb-4 mt-2">
-                        <div class="bg-danger rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 50px; height: 50px;">
+                        <!-- <div class="bg-danger rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 50px; height: 50px;">
                             <i class="fab fa-pinterest text-white fs-3"></i>
-                        </div>
+                        </div> -->
                         <h3 class="fw-bold">Masuk ke Akun</h3>
                         <p class="text-muted small">Temukan kembali ide-ide terbaik Anda</p>
                     </div>
@@ -31,7 +31,7 @@
                         <?= csrf_field(); ?>
                         
                         <div class="mb-3">
-                            <label class="form-label fw-bold ms-2 small">Email atau Username</label>
+                            <label class="form-label fw-bold ms-2 small">Username</label>
                             <input type="text" name="username" class="form-control rounded-pill py-2 px-3" placeholder="Masukkan email atau username" required autofocus>
                         </div>
                         
@@ -40,7 +40,7 @@
                             <input type="password" name="password" class="form-control rounded-pill py-2 px-3" placeholder="Masukkan kata sandi" required>
                         </div>
                         
-                        <button type="submit" class="btn btn-danger w-100 rounded-pill fw-bold py-2 mb-3">Masuk</button>
+                        <button type="submit" class="btn btn-primary w-100 rounded-pill fw-bold py-2 mb-3">Masuk</button>
                     </form>
                     
                     <div class="text-center mt-2 mb-2">
