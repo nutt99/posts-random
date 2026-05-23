@@ -6,12 +6,15 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: ci4_web
-    ports:
-      - "8081:80"
+    # ports:
+    #   - "8081:80"
     volumes:
       - .:/var/www/html
     environment:
       - CI_ENVIRONMENT=${CI_ENVIRONMENT}
+    networks:
+      - default
+      - nginx_network
     depends_on:
       - db
 
@@ -28,6 +31,10 @@ services:
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
     volumes:
       - db_data:/var/lib/mysql
+
+networks:
+  nginx_network:
+    external: true
 
 volumes:
   db_data:
