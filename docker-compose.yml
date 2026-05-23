@@ -12,11 +12,6 @@ services:
       - .:/var/www/html
     environment:
       - CI_ENVIRONMENT=${CI_ENVIRONMENT}
-      - database.default.hostname=${DB_HOSTNAME}
-      - database.default.database=${DB_DATABASE}
-      - database.default.username=${DB_USERNAME}
-      - database.default.password=${DB_PASSWORD}
-      - database.default.DBDriver=${DB_DRIVER}
     depends_on:
       - db
 
