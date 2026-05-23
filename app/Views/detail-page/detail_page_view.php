@@ -143,7 +143,7 @@
                             onclick="document.getElementById('inputKomentar').focus();">
                             <i class="fas fa-comment text-secondary fs-5"></i>
                         </button>
-                        <a href="<?= (strpos($post['content_url'], 'http') === 0) ? $post['content_url'] : base_url('uploads/photos/' . $post['content_url']) ?>"
+                        <a href="<?= base_url('/download/' . $post['content_url']) ?>"
                             download="Pin_<?= esc($post['title']) ?>"
                             class="btn btn-interaction rounded-circle d-flex align-items-center justify-content-center text-decoration-none"
                             style="width: 44px; height: 44px;" title="Unduh Gambar">
@@ -167,24 +167,29 @@
                 <img src="<?= $fotoUrl ?>" class="img-fluid mt-3"
                     style="border-radius: 30px; width: 100%; max-height: 65vh; object-fit: contain;" alt="">
 
+
                 <div class="mt-3 text-muted px-2">
                     <h1 class="fw-bold"><?= esc($post['title']) ?></h1>
                     <p class="mt-3"><?= esc($post['description']) ?></p>
                 </div>
 
-                <a href="<?= base_url('user/' . $post['id_user']) ?>" class="d-flex align-items-center mt-3 px-2 text-decoration-none text-dark animate-hover" style="cursor: pointer;">
-                    
+                <a href="<?= base_url('user/' . $post['id_user']) ?>"
+                    class="d-flex align-items-center mt-3 px-2 text-decoration-none text-dark animate-hover"
+                    style="cursor: pointer;">
+
                     <?php if (!empty($post['avatar']) && $post['avatar'] !== 'default.png'): ?>
                         <img src="<?= base_url('uploads/profile/' . $post['avatar']) ?>"
                             class="rounded-circle me-2 object-fit-cover" style="width: 45px; height: 45px;">
                     <?php else: ?>
-                        <div class="rounded-circle d-flex align-items-center justify-content-center bg-secondary text-white fw-bold me-2" style="width: 45px; height: 45px; font-size: 14px;">
+                        <div class="rounded-circle d-flex align-items-center justify-content-center bg-secondary text-white fw-bold me-2"
+                            style="width: 45px; height: 45px; font-size: 14px;">
                             <?= strtoupper(substr($post['username'], 0, 1)) ?>
                         </div>
                     <?php endif; ?>
-                    
+
                     <div>
-                        <span class="fw-bold d-block lh-sm text-dark"><?= esc($post['display_name'] ?: $post['username']) ?></span>
+                        <span
+                            class="fw-bold d-block lh-sm text-dark"><?= esc($post['display_name'] ?: $post['username']) ?></span>
                         <small class="text-muted">@<?= esc($post['username']) ?></small>
                     </div>
                 </a>
@@ -353,5 +358,20 @@
                 }).catch(error => console.error('Error:', error));
         });
     }
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const images = document.querySelectorAll('img');
+
+        images.forEach(img => {
+            img.addEventListener('contextmenu', function (e) {
+                e.preventDefault();
+            });
+
+            img.addEventListener('dragstart', function (e) {
+                e.preventDefault();
+            });
+        });
+    });
 </script>
 <?= $this->endSection(); ?>

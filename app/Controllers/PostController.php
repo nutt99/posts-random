@@ -10,6 +10,9 @@ use App\Models\Likes;
 use App\Models\Saves;
 use Exception;
 
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
+
 class PostController extends BaseController
 {
     public function index()
@@ -60,11 +63,28 @@ class PostController extends BaseController
 
                     $foto->move('uploads/photos', $namaFoto);
 
+                    $imagePath = FCPATH . 'uploads/photos/' . $namaFoto;
+
+                    $manager = new ImageManager(new Driver());
+
+                    $img = $manager->read($imagePath);
+
+                    $watermarkPath = FCPATH . 'images/logo-watermark.png';
+
+                    if (file_exists($watermarkPath)) {
+                        $watermark = $manager->read($watermarkPath);
+
+                        $watermark->scale(width: 100);
+
+                        $img->place($watermark, 'bottom-right', 10, 10);
+                    }
+
+                    $img->save($imagePath, 90);
+
                     $postModel = new Posts();
 
                     $postModel->insert([
                         'id_user' => $session->get('id'),
-                        // 'id_user'   => 1, 
                         'title' => $judul,
                         'description' => $deskripsi,
                         'content_url' => $namaFoto
@@ -137,7 +157,7 @@ class PostController extends BaseController
             'komentar' => $komentar,
             'jumlahLike' => $jumlahLike,
             'sudahLike' => $sudahLike,
-            'sudahSimpan'  => $sudahSimpan,
+            'sudahSimpan' => $sudahSimpan,
             'relatedPosts' => $relatedPosts
         ];
 
@@ -276,4 +296,32 @@ class PostController extends BaseController
         ]);
     }
 
+    public function downloadPhoto($namaFoto)
+    {
+        $imagePath = FCPATH . 'uploads/photos/' . $namaFoto;
+
+        if (!file_exists($imagePath)) {
+            return redirect()->back()->with('error', 'File tidak ditemukan.');
+        }
+
+        $manager = new ImageManager(new Driver());
+
+        $img = $manager->read($imagePath);
+
+        $watermarkPath = FCPATH . 'images/logo-watermark.png';
+
+        if (file_exists($watermarkPath)) {
+            $watermark = $manager->read($watermarkPath);
+            $watermark->scale(width: 100);
+            $img->place($watermark, 'bottom-right', 10, 10);
+        }
+
+        $encodedImage = $img->toJpeg(90)->toString();
+
+        $namaDownload = 'watermark_' . $namaFoto;
+
+        return $this->response->download($namaDownload, $encodedImage);
+    }
+
+    
 }

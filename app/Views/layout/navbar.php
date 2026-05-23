@@ -81,7 +81,7 @@
                     </a>
 
                 <?php else: ?>
-                    <a href="/login" class="btn btn-danger rounded-pill fw-bold px-4">Masuk</a>
+                    <a href="/login" class="btn btn-primary rounded-pill fw-bold px-4">Masuk</a>
                 <?php endif; ?>
             </div>
         </div>

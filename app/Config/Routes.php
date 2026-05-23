@@ -32,4 +32,6 @@ $routes->get('/profile/edit', 'ProfileController::edit');
 $routes->post('/profile/update', 'ProfileController::update');
 $routes->get('/user/(:num)', 'ProfileController::viewProfile/$1');
 
+$routes->get('/download/(:any)', 'PostController::downloadPhoto/$1');
+
 $routes->get('/logout', 'UserController::logout');
