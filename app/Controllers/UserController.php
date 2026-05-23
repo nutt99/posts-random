@@ -91,7 +91,7 @@ class UserController extends BaseController
                         'id' => $data['id'],
                         'username' => $data['username'],
                         'isLogin' => true,
-                        'avatar'   => $data['avatar']
+                        'avatar'   => $data['avatar'] ?? ''
                     ]);
 
                     return redirect()->to('/');
