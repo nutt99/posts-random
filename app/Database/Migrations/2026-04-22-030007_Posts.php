@@ -31,6 +31,10 @@ class Posts extends Migration
                 'type' => 'TIMESTAMP',
                 'null' => true,
             ],
+            'title' => [
+                'type' => 'VARCHAR',
+                'constraint' => 255
+            ]
         ]);
 
         $this->forge->addKey('id', true);
