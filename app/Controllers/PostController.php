@@ -65,21 +65,21 @@ class PostController extends BaseController
 
                     $imagePath = FCPATH . 'uploads/photos/' . $namaFoto;
 
-                    $manager = new ImageManager(new Driver());
+                    // $manager = new ImageManager(new Driver());
 
-                    $img = $manager->read($imagePath);
+                    // $img = $manager->read($imagePath);
 
-                    $watermarkPath = FCPATH . 'images/logo-watermark.png';
+                    // $watermarkPath = FCPATH . 'images/logo-watermark.png';
 
-                    if (file_exists($watermarkPath)) {
-                        $watermark = $manager->read($watermarkPath);
+                    // if (file_exists($watermarkPath)) {
+                    //     $watermark = $manager->read($watermarkPath);
 
-                        $watermark->scale(width: 100);
+                    //     $watermark->scale(width: 100);
 
-                        $img->place($watermark, 'bottom-right', 10, 10);
-                    }
+                    //     $img->place($watermark, 'bottom-right', 10, 10);
+                    // }
 
-                    $img->save($imagePath, 90);
+                    // $img->save($imagePath, 90);
 
                     $postModel = new Posts();
 
